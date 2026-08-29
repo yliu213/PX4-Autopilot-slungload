@@ -74,7 +74,7 @@
 	branch = px4
 [submodule "Tools/simulation/gz"]
 	path = Tools/simulation/gz
-	url = https://github.com/ANCL/PX4-gazebo-models.git
+	url = https://github.com/yliu213/PX4-gazebo-models-slungload.git
 	branch = lab/v1.16-gz-baseline
 [submodule "boards/modalai/voxl2/libfc-sensor-api"]
 	path = boards/modalai/voxl2/libfc-sensor-api
