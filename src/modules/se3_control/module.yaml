@@ -1,0 +1,138 @@
+module_name: Native SE3
+parameters:
+    - group: Native SE3
+      definitions:
+        SE3_ENABLE:
+            description:
+                short: Allow experimental onboard SE3 control
+                long: |
+                    Disabled by default. In SITL the mode registers at boot;
+                    selection requires a valid airborne handoff.
+            type: int32
+            min: 0
+            max: 1
+            default: 0
+        SE3_MASS:
+            description:
+                short: Vehicle mass for native SE3 controller
+            type: float
+            unit: kg
+            min: 0.0
+            max: 100.0
+            default: 0.0
+        SE3_KX:
+            description:
+                short: Native SE3 position gain divided by mass
+            type: float
+            min: 0.0
+            max: 100.0
+            default: 0.0
+        SE3_KV:
+            description:
+                short: Native SE3 velocity gain divided by mass
+            type: float
+            min: 0.0
+            max: 100.0
+            default: 0.0
+        SE3_KRX:
+            description:
+                short: Native SE3 roll attitude-to-rate gain
+            type: float
+            min: 0.0
+            max: 100.0
+            default: 0.0
+        SE3_KRY:
+            description:
+                short: Native SE3 pitch attitude-to-rate gain
+            type: float
+            min: 0.0
+            max: 100.0
+            default: 0.0
+        SE3_KRZ:
+            description:
+                short: Native SE3 yaw attitude-to-rate gain
+            type: float
+            min: 0.0
+            max: 100.0
+            default: 0.0
+        SE3_RATE_MAX:
+            description:
+                short: Native SE3 maximum requested body rate
+            type: float
+            unit: rad/s
+            min: 0.1
+            max: 12.0
+            default: 3.0
+        SE3_TORQUE_LAW:
+            description:
+                short: SE3 torque controller selection
+                long: |
+                    0 = geometric normalized torque
+                    1 = Lee physical moment controller
+            type: int32
+            min: 0
+            max: 1
+            default: 0
+        SE3_JXX:
+            description:
+                short: SE3 body inertia Jxx
+            type: float
+            min: 0.000001
+            max: 10.0
+            default: 0.021997
+        SE3_JYY:
+            description:
+                short: SE3 body inertia Jyy
+            type: float
+            min: 0.000001
+            max: 10.0
+            default: 0.0221599
+        SE3_JZZ:
+            description:
+                short: SE3 body inertia Jzz
+            type: float
+            min: 0.000001
+            max: 10.0
+            default: 0.0433006
+        SE3_PH_KRX:
+            description:
+                short: Physical roll attitude gain
+            type: float
+            min: 0.0
+            max: 100.0
+            default: 5.955179
+        SE3_PH_KRY:
+            description:
+                short: Physical pitch attitude gain
+            type: float
+            min: 0.0
+            max: 100.0
+            default: 5.955179
+        SE3_PH_KRZ:
+            description:
+                short: Physical yaw attitude gain
+            type: float
+            min: 0.0
+            max: 100.0
+            default: 0.407475
+        SE3_PH_KWX:
+            description:
+                short: Physical roll angular velocity gain
+            type: float
+            min: 0.0
+            max: 100.0
+            default: 0.916181
+        SE3_PH_KWY:
+            description:
+                short: Physical pitch angular velocity gain
+            type: float
+            min: 0.0
+            max: 100.0
+            default: 0.916181
+        SE3_PH_KWZ:
+            description:
+                short: Physical yaw angular velocity gain
+            type: float
+            min: 0.0
+            max: 100.0
+            default: 0.145527

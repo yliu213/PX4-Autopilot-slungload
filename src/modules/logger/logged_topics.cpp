@@ -252,6 +252,7 @@ void LoggedTopics::add_default_topics()
 	add_topic("vehicle_local_position");
 	add_topic("wind");
 	add_optional_topic_multi("yaw_estimator_status");
+	add_topic("se3_trajectory_status", 10);
 
 #endif /* CONFIG_ARCH_BOARD_PX4_SITL */
 

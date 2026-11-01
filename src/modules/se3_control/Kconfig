@@ -1,0 +1,5 @@
+menuconfig MODULES_SE3_CONTROL
+    bool "se3_control"
+    default n
+    ---help---
+        Experimental native SE(3) position/attitude reference to PX4 rate loop.

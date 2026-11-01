@@ -57,3 +57,19 @@ param set-default NAV_DLL_ACT 2
 
 # Override the Autostart ID
 param set-default SYS_AUTOSTART 4022
+
+# SE3 torque controller
+# 0: normalized, 1: physical
+param set-default SE3_TORQUE_LAW 0
+# F450 rigid-body inertia [kg m^2]
+param set-default SE3_JXX 0.021997
+param set-default SE3_JYY 0.0221599
+param set-default SE3_JZZ 0.0433006
+# Lee physical attitude gains [N m]
+param set-default SE3_PH_KRX 5.955179
+param set-default SE3_PH_KRY 5.955179
+param set-default SE3_PH_KRZ 0.407475
+# Lee physical angular-velocity gains [N m s]
+param set-default SE3_PH_KWX 0.916181
+param set-default SE3_PH_KWY 0.916181
+param set-default SE3_PH_KWZ 0.145527

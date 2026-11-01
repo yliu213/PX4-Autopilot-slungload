@@ -1,0 +1,5 @@
+menuconfig MODULES_TRAJECTORY_MANAGER
+    bool "trajectory_manager"
+    default n
+    ---help---
+        Load bounded trajectory plans for PX4-native controllers.
