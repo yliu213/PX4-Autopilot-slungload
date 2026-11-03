@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <array>
+// #include <array>
 #include <cstddef>
 #include <cstdint>
 
@@ -52,7 +52,8 @@ constexpr std::size_t kMaxSegments = 32;
 
 struct Sequence
 {
-  std::array<Segment, kMaxSegments> segments{};
+  // std::array<Segment, kMaxSegments> segments{};
+  Segment segments[kMaxSegments]{};
   std::size_t count{0};
 };
 

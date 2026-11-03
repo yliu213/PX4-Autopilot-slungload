@@ -37,7 +37,7 @@ else
     # Start Multicopter Attitude Controller.
     #
     mc_att_control start
-    
+
     #
     # Start Multicopter Position Controller.
     #
@@ -46,6 +46,6 @@ else
     if param greater -s MC_AT_EN 0
     then
         mc_autotune_attitude_control start
-    fi 
+    fi
 fi
 

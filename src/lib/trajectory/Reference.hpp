@@ -15,12 +15,24 @@
 
 #pragma once
 
-#include <array>
+// #include <array>
 
 namespace trajectory_generator
 {
 
-using Vector3 = std::array<float, 3>;
+// using Vector3 = std::array<float, 3>;
+struct Vector3
+{
+    float values[3]{};
+
+    float & operator[](unsigned i) {
+        return values[i];
+    }
+
+    const float & operator[](unsigned i) const {
+        return values[i];
+    }
+};
 
 struct Reference
 {

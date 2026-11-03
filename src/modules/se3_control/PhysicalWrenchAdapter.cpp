@@ -2,7 +2,7 @@
 
 #include <parameters/param.h>
 
-#include <algorithm>
+// #include <algorithm>
 #include <cmath>
 
 namespace se3_control
@@ -15,7 +15,7 @@ constexpr float kTmin = 0.27f;
 constexpr float kTmax = 12.0f;
 constexpr float kC1 = 3.06f;
 constexpr float kC2 = 8.67f;
-inline float limit(float x, float lo, float hi) { return std::min(std::max(x, lo), hi); }
+inline float limit(float x, float lo, float hi) { return fminf(fmaxf(x, lo), hi); }
 
 // 4x4 inverse, computed only when the PX4 configuration changes.
 bool inverse4(const float a[N][N], float inverse[N][N])
@@ -31,7 +31,11 @@ bool inverse4(const float a[N][N], float inverse[N][N])
             if (std::fabs(aug[r][c]) > std::fabs(aug[pivot][c])) { pivot = r; }
         }
         if (!std::isfinite(aug[pivot][c]) || std::fabs(aug[pivot][c]) < 1e-10) { return false; }
-        for (int j = 0; j < 2 * N; ++j) { std::swap(aug[pivot][j], aug[c][j]); }
+        for (int j = 0; j < 2 * N; ++j) {
+            const double temp = aug[pivot][j];
+            aug[pivot][j] = aug[c][j];
+            aug[c][j] = temp;
+        }
         const double d = aug[c][c];
         for (int j = 0; j < 2 * N; ++j) { aug[c][j] /= d; }
         for (int r = 0; r < N; ++r) {
@@ -99,12 +103,12 @@ bool PhysicalWrenchAdapter::load_configuration(Configuration & config)
     }
     if (nr == 0 || np == 0) { return false; }
     config.scale[0] = config.scale[1] =
-        std::max(std::sqrt(roll_sq / (nr / 2.f)),
+        fmaxf(std::sqrt(roll_sq / (nr / 2.f)),
                  std::sqrt(pitch_sq / (np / 2.f)));
     config.scale[2] = mix[0][2];
     config.scale[3] = 0.f;
     for (int i = 0; i < N; ++i) {
-        config.scale[2] = std::max(config.scale[2], mix[i][2]);
+        config.scale[2] = fmaxf(config.scale[2], mix[i][2]);
         config.scale[3] += std::fabs(mix[i][3]) / N;
     }
     for (float s : config.scale) {
@@ -132,9 +136,9 @@ bool PhysicalWrenchAdapter::adapt(const Configuration & config,
         }
         if (trim[i] < kTmin - 1e-4f || trim[i] > kTmax + 1e-4f) { return false; }
         if (delta[i] > 0.f) {
-            factor = std::min(factor, (kTmax - trim[i]) / delta[i]);
+            factor = fminf(factor, (kTmax - trim[i]) / delta[i]);
         } else if (delta[i] < 0.f) {
-            factor = std::min(factor, (kTmin - trim[i]) / delta[i]);
+            factor = fminf(factor, (kTmin - trim[i]) / delta[i]);
         }
     }
     factor = limit(factor, 0.f, 1.f);

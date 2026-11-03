@@ -44,7 +44,7 @@
 
 #include <matrix/matrix/math.hpp>
 
-#include <algorithm>
+// #include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <cstring>
@@ -237,7 +237,7 @@ private:
         _origin = {};
         _origin.position = {_position.x, _position.y, _position.z};
         _origin.yaw = _position.heading;
-        _sequence = {};
+        _sequence = trajectory_generator::Sequence{};
         _sequence.count = 1;
         _sequence.segments[0].type = trajectory_generator::Segment::Type::Hold;
         _sequence.segments[0].duration_s = 86400.0f;
@@ -389,7 +389,7 @@ private:
             capture_hold();
         }
 
-        trajectory_generator::Plan plan{};
+        trajectory_generator::Plan &plan = _pending_plan;
 
         if (trajectory_generator::consume_start_request(plan)) {
             // Explicit pilot request. Deliberately do not compare the current
@@ -476,12 +476,12 @@ private:
 
         // vehicle_rates_setpoint_s setpoint{};
         // setpoint.timestamp = hrt_absolute_time();
-        // setpoint.roll = std::min(std::max(body_rate(0), -rate_limit), rate_limit);
-        // setpoint.pitch = std::min(std::max(body_rate(1), -rate_limit), rate_limit);
-        // setpoint.yaw = std::min(std::max(body_rate(2), -rate_limit), rate_limit);
+        // setpoint.roll = fminf(fmaxf(body_rate(0), -rate_limit), rate_limit);
+        // setpoint.pitch = fminf(fmaxf(body_rate(1), -rate_limit), rate_limit);
+        // setpoint.yaw = fminf(fmaxf(body_rate(2), -rate_limit), rate_limit);
         // setpoint.thrust_body[0] = 0.f;
         // setpoint.thrust_body[1] = 0.f;
-        // setpoint.thrust_body[2] = -std::min(std::max(thrust, 0.0f), 1.0f);
+        // setpoint.thrust_body[2] = -fminf(fmaxf(thrust, 0.0f), 1.0f);
         // _rate_setpoint_pub.publish(setpoint);
         /////////////////////////////////////////////////////////////////////////////////
 
@@ -568,14 +568,14 @@ private:
         vehicle_thrust_setpoint_s thrust_sp{};
         thrust_sp.timestamp = now;
         thrust_sp.timestamp_sample = _gyro.timestamp_sample;
-        thrust_sp.xyz[2] = -std::min(std::max(thrust, 0.f), 1.f);
+        thrust_sp.xyz[2] = -fminf(fmaxf(thrust, 0.f), 1.f);
         _thrust_setpoint_pub.publish(thrust_sp);
 
         vehicle_torque_setpoint_s torque_sp{};
         torque_sp.timestamp = now;
         torque_sp.timestamp_sample = _gyro.timestamp_sample;
         for (int axis = 0; axis < 3; ++axis) {
-            torque_sp.xyz[axis] = std::min(std::max(normalized_torque(axis), -1.f), 1.f);
+            torque_sp.xyz[axis] = fminf(fmaxf(normalized_torque(axis), -1.f), 1.f);
         }
         _torque_setpoint_pub.publish(torque_sp);
         ///////////////////////////////////////////////////////////////////////////////
@@ -607,7 +607,7 @@ private:
         record.phase = _completed.load() ? se3_trajectory_status_s::PHASE_COMPLETED :
                        (_executing.load() ? se3_trajectory_status_s::PHASE_RUNNING :
                                             se3_trajectory_status_s::PHASE_HOLD);
-        record.elapsed_s = _active_plan_crc > 0 ? std::min(elapsed_s, _duration_s) : 0.0f;
+        record.elapsed_s = _active_plan_crc > 0 ? fminf(elapsed_s, _duration_s) : 0.0f;
         for (int axis = 0; axis < 3; ++axis) {
             record.position[axis] = reference.position[axis];
             record.velocity[axis] = reference.velocity[axis];
@@ -730,6 +730,7 @@ private:
 
     trajectory_generator::Reference _origin{};
     trajectory_generator::Sequence _sequence{};
+    trajectory_generator::Plan _pending_plan{};
     hrt_abstime _start_time{0};
     uint64_t _registration_request_id{0};
     int8_t _mode_id{-1};
