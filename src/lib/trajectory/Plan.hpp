@@ -15,11 +15,12 @@ namespace trajectory_generator
 
 struct Plan
 {
-  char name[32]{}; // Assigned by the onboard selection command.
-  Reference origin{};
-  Sequence sequence{};
-  float duration_s{0.0f};
-  uint32_t checksum{0}; // CRC32 of the loaded trajectory file.
+    char name[32]{};
+    Reference origin{};
+    Sequence sequence{};
+    float duration_s{0.0f};
+    uint32_t checksum{0}; // File CRC32 or built-in trajectory ID
+    bool start_at_current{false}; // Built-in trajectory uses current pose
 };
 
 // Text format version 2, produced by tools/trajectory_lib/compiler.py:

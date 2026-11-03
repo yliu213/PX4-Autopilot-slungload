@@ -394,7 +394,14 @@ private:
         if (trajectory_generator::consume_start_request(plan)) {
             // Explicit pilot request. Deliberately do not compare the current
             // position or yaw with the plan origin, and do not reposition first.
-            _origin = plan.origin;
+            // _origin = plan.origin;
+            if (plan.start_at_current) {
+                _origin = {};
+                _origin.position = {_position.x, _position.y, _position.z};
+                _origin.yaw = _position.heading;
+            } else {
+                _origin = plan.origin;
+            }
             _sequence = plan.sequence;
             _duration_s = plan.duration_s;
             _active_plan_crc = plan.checksum;
